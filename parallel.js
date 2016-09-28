@@ -20,7 +20,15 @@ co(function* (){
     const paths = _.range(0, 10).map((n) => 'path/to/file' + n);
     const contents = [];
 
-    /* implement parallel process here */
+    let pathIndex = 0;
+
+    function* consumer(consumerIndex) {
+        const pathIndexCopy = pathIndex++; // increment so that next consumer takes the next one
+        contents[pathIndexCopy] = yield request(paths[pathIndexCopy]);
+        if (pathIndex < paths.length) yield consumer(consumerIndex);
+    }
+    
+    yield _.range(0, 2).map(consumer);
 
     return contents;
 
