@@ -19,7 +19,7 @@ co(function* (){
     const paths = _.range(0, 10).map((n) => 'path/to/file' + n);
     const contents = [];
 
-    /* implement sized batching here */
+    while (paths.length) contents.push(...yield paths.splice(0, 2).map(request));
 
     return contents;                
 
